@@ -1,0 +1,16 @@
+{
+    "name": "alex/tmp",
+    "description": "none",
+    "type": "project",
+    "license": "none",
+    "minimum-stability": "alpha",
+    "require": {
+        "twig/twig": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Routers\\": "src/Router",
+            "Controllers\\": "src/Controllers"
+        }
+    }
+}
