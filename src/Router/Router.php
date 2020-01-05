@@ -4,6 +4,10 @@ namespace Routers;
 
 use Routers\RoutersLoader;
 
+/**
+ * Class Router
+ * @package Routers
+ */
 class Router
 {
     /**
@@ -12,6 +16,9 @@ class Router
      * @var string
      */
     private $current_controller = '';
+    /**
+     * @var mixed|string
+     */
     private $current_action = '';
 
     /**
@@ -20,20 +27,20 @@ class Router
      */
     public function __construct()
     {
-        if (!empty($_GET['controller']) && RoutersLoader::checkValidRouters($_GET['controller'])) {
-            $this->current_controller = '\\Controllers\\' . ucfirst($_GET['controller']) . 'Controller';
-        } elseif (empty($_GET['controller'])) {
+        if (!empty($_REQUEST['controller']) && RoutersLoader::checkValidRouters($_REQUEST['controller'])) {
+            $this->current_controller = '\\Controllers\\' . $this->toCamelCaseParser($_REQUEST['controller']) . 'Controller';
+        } elseif (empty($_REQUEST['controller'])) {
             $this->current_controller = '\\Controllers\\IndexController';
         } else {
             $this->current_controller = '\\Controllers\\PageNotFoundController';
             $this->current_action = '';
         }
 
-        if (!empty($_GET['action'])) {
-            $this->current_action = $_GET['action'];
+        if (!empty($_REQUEST['action'])) {
+            $this->current_action = $this->toCamelCaseParser($_REQUEST['action']);
         }
-        unset($_GET['controller'], $_GET['action']);
-        $this->getController();
+        unset($_REQUEST['controller'], $_REQUEST['action']);
+        return $this->getController();
     }
 
     /**
@@ -43,6 +50,7 @@ class Router
     {
         $params = $this->getParamsfromGetMethod();
         $controller = new $this->current_controller($this->current_action, $params);
+        return $controller;
     }
 
     /**
@@ -53,11 +61,29 @@ class Router
     protected function getParamsfromGetMethod()
     {
         $params = [];
-        foreach ($_GET as $key => $param) {
+        foreach ($_REQUEST as $key => $param) {
             if ($key !== 'action' || $key !== 'controller') {
                 $params[] = $param;
             }
         }
         return $params;
+    }
+
+    /**
+     * Make from snake case string camel case string and return it.
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function toCamelCaseParser(string $value)
+    {
+        $value = str_split(ucfirst($value));
+        for ($i = 0; $i < count($value); $i++) {
+            if ($value[$i] === '_') {
+                $value[$i + 1] = ucfirst($value[$i + 1]);
+                unset($value[$i]);
+            }
+        }
+        return implode($value);
     }
 }

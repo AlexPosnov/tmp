@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'index' => true
+    'index' => true,
+    'user_auth' => true,
 ];

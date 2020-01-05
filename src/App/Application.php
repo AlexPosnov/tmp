@@ -1,39 +1,112 @@
 <?php
 
+namespace Application;
+
 use Routers\Router;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Application\CookieHandler;
+use Application\Session;
 
 class Application
 {
-    private $template = [];
-    private $session;
-    private $user;
-    private $router;
+    /**
+     * @var array
+     */
+    private static $template = [];
 
+    /**
+     * @var
+     */
+    private $session;
+    /**
+     * @var
+     */
+    private $user;
+    /**
+     * @var
+     */
+    private $router;
+    /**
+     * @var array
+     */
+    public static $content = [];
+
+    /**
+     * Application constructor.
+     */
     public function __construct()
     {
-        $this->session = $_SESSION;
-        $this->template = $this->getDefaultTemplate();
-        $this->template = $this->getModelTemplates();
-        $this->render();
+        new CookieHandler();
+        Session::setArrayData($_SESSION);
+        self::setContent('is_auth', self::checkAuth(Session::getData('name')));
+        $this->Router();
     }
 
-    public function getDefaultTemplate(array $template)
+
+    /**
+     * Launch new router for current request.
+     *
+     * @param array $template
+     * @return Router
+     */
+    public function Router(array $template = [])
     {
-        $template['meta'] = VIEW_DIR . '/Pages/CommonTemplates/meta.tpl';
-        $template['header'] = VIEW_DIR . '/Pages/CommonTemplates/header.tpl';
-        $template['footer'] = VIEW_DIR . '/Pages/CommonTemplates/footer.tpl';
-
-        return $template;
+        new Router();
     }
 
-    public function getModelTemplates(array $template)
+    /**
+     * Set some content in Application class.
+     *
+     * @param $name
+     * @param $value
+     */
+    public static function setContent($name, $value)
     {
-        return $this->router = new Router();
+        self::$content[$name] = $value;
     }
 
-    public function render()
+    /**
+     * Get some stored content from Application class.
+     *
+     * @param $name
+     * @return mixed
+     */
+    public static function getContent($name)
     {
-
+        return self::$content[$name];
     }
 
+    /**
+     * Set some template to Application.
+     *
+     * @param $name
+     * @param $value
+     */
+    public static function setTemplate($name, $value)
+    {
+        self::$template[$name] = $value;
+    }
+
+    /**
+     * Get some template from Application.
+     *
+     * @param $name
+     * @return mixed
+     */
+    public static function getTemplate($name)
+    {
+        return self::$template[$name];
+    }
+
+    /**
+     * Checks if a user authorized or not.
+     *
+     * @param string $auth
+     * @return bool
+     */
+    protected static function checkAuth($auth)
+    {
+        return isset($auth);
+    }
 }

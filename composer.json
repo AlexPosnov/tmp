@@ -5,12 +5,17 @@
     "license": "none",
     "minimum-stability": "alpha",
     "require": {
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "doctrine/orm": "^2.7"
     },
     "autoload": {
         "psr-4": {
             "Routers\\": "src/Router",
-            "Controllers\\": "src/Controllers"
+            "Controllers\\": "src/Controllers",
+            "Models\\": "src/Models",
+            "Application\\": "src/App",
+            "Settings\\": "src/Settings",
+            "Handlers\\": "src/Handlers"
         }
     }
 }
