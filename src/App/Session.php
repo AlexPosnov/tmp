@@ -14,7 +14,7 @@ class Session
     public static $data;
 
     /**
-     * I still don't no what for it will use.
+     * I still don't know what for it will use.
      *
      * Session constructor.
      */
@@ -52,8 +52,7 @@ class Session
      */
     public static function setArrayData(array $data)
     {
-        foreach ($data as $key => $value)
-        {
+        foreach ($data as $key => $value) {
             self::setData($key, $value);
         }
     }
