@@ -4,11 +4,13 @@
 namespace Tasks;
 
 
+use Taska\ITask;
+
 /**
  * Class Task
  * @package Tasks
  */
-class Task
+class Task implements ITask
 {
     /**
      * @var
